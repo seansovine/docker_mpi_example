@@ -74,8 +74,8 @@ but for this simple example doing so shows that the MPI program is running on mu
 You can also, for example, run the MPI code from the host with the command:
 
 ```shell
-docker exec -t --user mpirun head mpicc -o /host_code/demo /host_code/demo.c
-docker exec -t --user mpirun head mpirun -np 2 -host head,node1 /host_code/demo
+docker exec -t head mpicc -o /build/demo /host_code/demo.c
+docker exec -t --user mpirun head mpirun -np 2 -host head,node1 /build/demo
 ```
 
 ## To Do

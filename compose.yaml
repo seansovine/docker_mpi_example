@@ -11,6 +11,7 @@ services:
     hostname: head
     volumes:
       - ./src:/host_code
+      - build:/build
     links:
       - mpi_node
     networks:
@@ -24,9 +25,13 @@ services:
     hostname: node1
     volumes:
       - ./src:/host_code
+      - build:/build
     networks:
       - cluster_network
 
 networks:
   cluster_network:
     name: cluster_network
+
+volumes:
+  build:
