@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+docker rmi docker_mpi_example-mpi_head
+docker rmi docker_mpi_example-mpi_node
