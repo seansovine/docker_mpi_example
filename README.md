@@ -45,7 +45,12 @@ docker exec -ti <container_name> /bin/bash
 
 ## Notes on Building and Running programs with OpenMPI
 
-First
+First start an interactive shell session in the `head` container with the
+command above. Then in the container shell you can run the following commands 
+to build and run the test program with OpenMPI. 
+
+First, switch to the `mpirun` user and change to the code directory
+that is mounted from the host:
 
 ```shell
 su - mpirun && cd /host_code
@@ -57,13 +62,16 @@ Then we can build from inside the head container with
 mpicc -o demo demo.c
 ```
 
-And then in theory we can run with
+Then we can run the built program with
 
 ```shell
 mpirun -np 2 -host head,node1 ./demo
 ```
 
-You can, for example, run the MPI code from the host with:
+Note that in general we wouldn't be running our code also on the head node,
+but for this simple example doing so shows that the MPI program is running on multiple nodes.
+
+You can also, for example, run the MPI code from the host with the command:
 
 ```shell
 docker exec -t --user mpirun head mpirun -np 2 -host head,node1 /host_code/demo
