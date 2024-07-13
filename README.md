@@ -49,20 +49,20 @@ First start an interactive shell session in the `head` container with the
 command above. Then in the container shell you can run the following commands
 to build and run the test program with OpenMPI.
 
-First, switch to the `mpirun` user and change to the code directory
+We can build from inside the head container with
+
+```shell
+cd /host_code && mpicc -o /build/demo demo.c
+```
+
+Then switch to the `mpirun` user and change to the code directory
 that is mounted from the host:
 
 ```shell
-su - mpirun && cd /host_code
+su - mpirun && cd /build
 ```
 
-Then we can build from inside the head container with
-
-```shell
-mpicc -o demo demo.c
-```
-
-Then we can run the built program with
+Finally, we can run the built program with
 
 ```shell
 mpirun -np 2 -host head,node1 ./demo
