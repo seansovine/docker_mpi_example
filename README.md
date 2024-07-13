@@ -1,6 +1,6 @@
 # Docker Compose MPI Cluster
 
-This project will be a simple Docker Compose configuration for an MPI cluster,
+This project is a simple Docker Compose configuration for an MPI cluster,
 with each node defined by a Dockerfile that provides the environment
 for OpenMPI to run in. The purpose is to provide a test environment for
 learning distributed computing with MPI on a single machine that is
@@ -46,8 +46,8 @@ docker exec -ti <container_name> /bin/bash
 ## Notes on Building and Running programs with OpenMPI
 
 First start an interactive shell session in the `head` container with the
-command above. Then in the container shell you can run the following commands 
-to build and run the test program with OpenMPI. 
+command above. Then in the container shell you can run the following commands
+to build and run the test program with OpenMPI.
 
 First, switch to the `mpirun` user and change to the code directory
 that is mounted from the host:
@@ -74,6 +74,7 @@ but for this simple example doing so shows that the MPI program is running on mu
 You can also, for example, run the MPI code from the host with the command:
 
 ```shell
+docker exec -t --user mpirun head mpicc -o /host_code/demo /host_code/demo.c
 docker exec -t --user mpirun head mpirun -np 2 -host head,node1 /host_code/demo
 ```
 

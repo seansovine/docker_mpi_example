@@ -2,7 +2,7 @@ services:
   mpi_head:
     build:
       context: ./
-      dockerfile: ./docker/head/Dockerfile
+      dockerfile: ./docker/Dockerfile
     # image: openmpi
     container_name: head
     # Why does only head need to open this port?
@@ -10,7 +10,7 @@ services:
       - "22"
     hostname: head
     volumes:
-      - ./code:/host_code
+      - ./src:/host_code
     links:
       - mpi_node
     networks:
@@ -19,11 +19,11 @@ services:
   mpi_node:
     build:
       context: ./
-      dockerfile: ./docker/head/Dockerfile
+      dockerfile: ./docker/Dockerfile
     container_name: node_1
     hostname: node1
     volumes:
-      - ./code:/host_code
+      - ./src:/host_code
     networks:
       - cluster_network
 

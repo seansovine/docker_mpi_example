@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#  `source` this file in the shell you use to run the project
+
+term() {
+	docker exec -ti $1 /bin/bash
+}

@@ -2,12 +2,15 @@
 
 # Use LTS release
 FROM ubuntu:24.04
-# FROM phusion/baseimage
 
 ENV USER mpirun
 
 ENV DEBIAN_FRONTEND=noninteractive \
 	HOME=/home/${USER}
+
+# ------------------------------------------------------------
+# Install dependencies
+# ------------------------------------------------------------
 
 RUN apt-get update -y && \
 	apt-get install -y --no-install-recommends sudo apt-utils && \
@@ -33,7 +36,7 @@ RUN adduser --disabled-password --gecos "" ${USER} && \
 	echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # ------------------------------------------------------------
-# Set-Up SSH with our Github deploy key
+# Set-Up SSH with a pre-generated key
 # ------------------------------------------------------------
 
 ENV SSHDIR ${HOME}/.ssh/
@@ -48,8 +51,6 @@ ADD ssh/id_rsa.mpi.pub ${SSHDIR}/authorized_keys
 RUN chmod -R 600 ${SSHDIR}* && \
 	chown -R ${USER}:${USER} ${SSHDIR}
 
-USER ${USER}
-
 # ------------------------------------------------------------
 # Configure OpenMPI
 # ------------------------------------------------------------
@@ -57,16 +58,12 @@ USER ${USER}
 USER root
 
 RUN rm -fr ${HOME}/.openmpi && mkdir -p ${HOME}/.openmpi
-ADD default-mca-params.conf ${HOME}/.openmpi/mca-params.conf
+ADD conf/default-mca-params.conf ${HOME}/.openmpi/mca-params.conf
 RUN chown -R ${USER}:${USER} ${HOME}/.openmpi
 
 # ------------------------------------------------------------
 # Remaining container config
 # ------------------------------------------------------------
-
-# What original purpose did this serve?
-# Is it still necessary for us?
-ENV TRIGGER 1
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
