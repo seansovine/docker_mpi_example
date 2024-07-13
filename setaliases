@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 #  `source` this file in the shell you use to run the project
+#  i.e., run `source setaliases` in the shell
+
+alias dkc="docker compose"
 
 term() {
 	docker exec -ti $1 /bin/bash
