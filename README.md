@@ -71,7 +71,7 @@ mpirun -np 2 -host head,node1 ./demo
 Note that in general we wouldn't be running our code also on the head node,
 but for this simple example doing so shows that the MPI program is running on multiple nodes.
 
-You can also, for example, run the MPI code from the host with the command:
+You can also, for example, run the MPI code from the host with the commands:
 
 ```shell
 docker exec -t head mpicc -o /build/demo /host_code/demo.c
@@ -83,5 +83,5 @@ docker exec -t --user mpirun head mpirun -np 2 -host head,node1 /build/demo
 Create a more interesting example program, maybe a basic implementation of some
 standard distributed numerical algorithm for, say, matrix multiplication.
 
-Update the MPI and/or configuration to allow using more than one processor per node.
+Update the MPI and/or Docker configuration to allow using more than one processor per node.
 Currently using more than one slot per node is giving a "not enough slots available" error.
