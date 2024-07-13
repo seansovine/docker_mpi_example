@@ -8,50 +8,71 @@ easy to setup and reproduce.
 
 What we have so far is based on
 [this](https://codigos.ufsc.br/setic-hpc/openmpi/-/blob/master/Dockerfile),
-but it will need to be modified further to remove configurations that
-are specific to their setup and to provide our own example program, since
-theirs
+with our own modifications and a few things we picked up from other sources,
+including [this](https://mpitutorial.com/tutorials/mpi-hello-world/)
+nice tutorial, from which we borrowed our example program.
+
+## Notes on Docker
+
+The following commands are useful:
+
+```bash
+# Bring up the containers detached from standard out.
+docker compose up -d
+
+# Bring down all the containers running as part of the compose session.
+docker compose down
+
+# "List running containers for a Compose project."
+docker compose ps
+
+# Destroy containers created by this project.
+docker rmi docker_mpi_example-mpi_head && docker rmi docker_mpi_example-mpi_node
+```
+
+In `compose.yaml` we've given the containers and the network memorable names.
+We also usually define:
+
+```shell
+alias dkc="docker compose"
+```
+
+To run an interactive shell in one of the running containers you can use:
+
+```bash
+docker exec -ti <container_name> /bin/bash
+```
+
+## Notes on Building and Running programs with OpenMPI
+
+First
+
+```shell
+su - mpirun && cd /host_code
+```
+
+Then we can build from inside the head container with
+
+```shell
+mpicc -o demo demo.c
+```
+
+And then in theory we can run with
+
+```shell
+mpirun -np 2 -host head,node1 ./demo
+```
+
+You can, for example, run the MPI code from the host with:
+
+```shell
+docker exec -t --user mpirun head mpirun -np 2 -host head,node1 /host_code/demo
+```
 
 ## To Do
 
-There's quite a bit to do here. This is just a list of things in no particular order:
+Create a more interesting example program, maybe a basic implementation of some
+standard distributed numerical algorithm for, say, matrix multiplication.
 
-__Generally, figure out how to set up an MPI cluster:__
-
-It's fine if this is in a more basic configuration, e.g., just a few computers on a LAN.
-This is most likely what you'll find by searching. [This](https://mpitutorial.com/) site
-and the books it links to, especially
-[this one](https://www.amazon.com/Using-MPI-Programming-Message-Passing-Engineering/dp/0262527391/),
-seem like very good places to start.
-
-__Figuring out how to Dockerize this:__
-
-So we need to figure out what things need to be installed into the underlying Linux
-container to support MPI and anything that it requires.
-Networking will almost certainly be a part of this.
-
-[Here](https://codigos.ufsc.br/setic-hpc/openmpi/-/blob/master/Dockerfile) is an example
-of a Dockerfile for an OpenMPI setup in Docker compose, that uses a Python setup for MPI.
-This is probably a good starting point for our own efforts at Dockerizing, but we need
-to understand how OpenMPI is configured and works in a more standard scenario.
-
-__Some more specific questions:__
-
-+ How do MPI nodes communicate over the network?
-+ What configuration needs done for this?
-  + E.g., do they use SSH and how is it configured?
-  + What software needs to be installed inside the node containers?
-
-__Networking in particular:__
-
-It looks like the example setup we grabbed from the link above is using SSH.
-This is something we might need to think about a bit, in reference to keys
-and such, and how to configure them inside the containers, which will be created
-and destroyed multiple times with a scripted setup and teardown process.
-
-## Thoughts
-
-This is looking like it might be relatively straightforward. Once we've gotten through
-this initial part, then we'll need to create an example program to run inside of the
-cluster. For that we can probably look at some of the books we have on parallel and
-distributed scientific computing. We have several good ones.
+Update the MPI and/or configuration to allow using more than one processor per node.
+Currently using more than one slot per node is giving a "not enough slots available" error.
